@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gemma/flutter_gemma.dart';
 import 'package:flutter_gemma_litertlm/flutter_gemma_litertlm.dart';
-
+import 'package:flutter/services.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   
@@ -144,6 +144,8 @@ class _NotePadState extends State<NotePad> {
     }
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -168,7 +170,9 @@ class _NotePadState extends State<NotePad> {
               hintText: _isModelReady ? "Type or paste your text here to summarize..." : "Please wait, preparing local model...",
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.0)
-              )
+              ),
+              
+              
             ),
             maxLength: null,
             maxLines: null,
@@ -177,18 +181,37 @@ class _NotePadState extends State<NotePad> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        // Disable click actions completely while the model is downloading or processing
-        onPressed: _isModelReady ? _askGemma : null,
-        backgroundColor: _isModelReady ? null : Colors.grey.withValues(alpha: 0.3),
-        child: (!_isModelReady || _isProcessing)
-            ? const Padding(
-                padding: EdgeInsets.all(12.0),
-                child: CircularProgressIndicator(strokeWidth: 2),
-              )
-            : const Icon(Icons.psychology),
-            
+      floatingActionButton: Row(
+        mainAxisSize: MainAxisSize.min,
+        
+        children: [
+          FloatingActionButton(
+                
+                onPressed: _isProcessing ? null : () async {
+                    
+                    final data = await Clipboard.getData(Clipboard.kTextPlain);
+                    if (data?.text != null) {
+                    _myController.text = data!.text!;
+                    }
+                },
+                child: const Icon(Icons.paste)
+          ),
+          const SizedBox(width: 16),
+          FloatingActionButton(
+            onPressed: _isModelReady ? _askGemma : null,
+            backgroundColor: _isModelReady ? null : Colors.grey.withValues(alpha: 0.3),
+            child: (!_isModelReady || _isProcessing)
+                ? const Padding(
+                    padding: EdgeInsets.all(12.0),
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.psychology),
+                
       ),
+        ]
+      ),
+      
+      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
     );
   }
 }
