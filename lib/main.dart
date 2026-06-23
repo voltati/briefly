@@ -115,7 +115,7 @@ class _NotePadState extends State<NotePad> {
     
     try {
       final model = await FlutterGemma.getActiveModel(maxTokens: 8192,
-  preferedBackend: PreferedBackend.npu,
+  preferredBackend: PreferredBackend.npu,
       
       );
       final chat = await model.createChat(temperature: 0.7);
