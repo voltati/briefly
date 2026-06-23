@@ -4,6 +4,9 @@ on:
   push:
     tags:
       - 'v*'
+    branches:
+      - '*'
+  workflow_dispatch:
 permissions:
   contents: write
   

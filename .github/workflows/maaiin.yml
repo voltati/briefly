@@ -1,0 +1,32 @@
+name: Force Update Main
+on: workflow_dispatch
+
+permissions:
+  contents: write
+
+jobs:
+  force-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetches all branches and tags
+
+      - name: Clear Workflow Differences and Push
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "actions@github.com"
+          
+          # 1. Move HEAD to your target tag/branch
+          git checkout v1.1.0
+          
+          # 2. Pull the .github/workflows folder exactly as it currently exists on remote main
+          git checkout origin/main -- .github/workflows
+          
+          # 3. Commit that change so HEAD has no workflow modifications compared to main
+          git commit -m "Keep current main workflows to bypass token restrictions" || echo "No workflow differences found"
+          
+          # 4. Force push this state into main
+          git push origin HEAD:main --force
+          
