@@ -3,8 +3,10 @@ name: Build and Release APK
 on:
   push:
     tags:
-      - 'v*' # Trigger only when you push a tag starting with 'v'
-
+      - 'v*'
+permissions:
+  contents: write
+  
 jobs:
   build:
     name: Build APK
