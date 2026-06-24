@@ -118,7 +118,7 @@ class _NotePadState extends State<NotePad> {
   preferredBackend: PreferredBackend.npu,
       
       );
-      final chat = await model.createChat(temperature: 0.7);
+      final chat = await model.createChat();
       await chat.addQueryChunk(Message(text: query, isUser: true));
       await for (final response in chat.generateChatResponseAsync()) {
         if (response is TextResponse) {
